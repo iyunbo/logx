@@ -1,6 +1,6 @@
-# LogZ is a modern AI system for performance analysis and anomaly detection based on log files
+# LogX is a modern AI system for performance analysis and anomaly detection based on log files
 
-Logz is based on following open source technologies
+LogX is based on following open source technologies
 
 - Python 3.7
 - MLflow: https://mlflow.org/
