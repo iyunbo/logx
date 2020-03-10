@@ -1,3 +1,6 @@
+awscli
+botocore
+PyYAML<5.3
 pandas
 numpy
 torch
