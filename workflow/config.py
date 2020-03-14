@@ -1,5 +1,5 @@
 INPUT_DIR = 'data/raw/'  # The input directory of log file
-OUTPUT_DIR = 'result/'  # The output directory of parsing results
+OUTPUT_DIR = 'output/'  # The output directory of parsing results
 LOG_FILE = 'log4j-2020-02-28-22.log'  # The input log file name
 LOG_FORMAT = '<Date> <Time> <Level> <Component>: <Content>'  # HDFS log format
 EVENT_KEY = 'EventTemplate'  # The column name for event unique name

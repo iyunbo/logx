@@ -13,7 +13,7 @@ from deeplog.model import DeepLog
 def run(dataloader, num_classes):
     model = DeepLog(config.INPUT_SIZE, config.HIDDEN_SIZE, config.NUM_LAYERS, num_classes, config.DEVICE)
     log = 'Adam_batch_size={}_epoch={}'.format(str(config.BATCH_SIZE), str(config.NUM_EPOCHS))
-    writer = SummaryWriter(log_dir='log/' + log)
+    writer = SummaryWriter(log_dir=os.path.join(config.OUTPUT_DIR, log))
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
