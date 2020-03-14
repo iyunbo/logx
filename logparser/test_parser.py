@@ -4,7 +4,7 @@ import sys
 sys.path.append('../')
 from logparser import Drain
 
-input_dir = '../logs/raw/'  # The input directory of log file
+input_dir = '../data/raw/'  # The input directory of log file
 output_dir = 'result/'  # The output directory of parsing results
 log_file = 'log4j-2020-02-28-22.log'  # The input log file name
 log_format = '<Date> <Time> <Level> <Component>: <Content>'  # HDFS log format
