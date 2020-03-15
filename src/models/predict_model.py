@@ -2,7 +2,7 @@ import time
 
 import torch
 
-import src.config as config
+import config.local as config
 from src.models.deeplog import DeepLog
 
 

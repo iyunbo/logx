@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 
-import src.config as config
+import config.local as config
 from src.models.deeplog import DeepLog
 
 

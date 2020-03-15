@@ -11,7 +11,7 @@ INPUT_SIZE = 1  # The length of LSTM input vector
 HIDDEN_SIZE = 64  # The size of the hidden layer of LSTM
 NUM_LAYERS = 2  # How many layers do we want to build the LSTM
 DEVICE = 'cpu'  # The hardware device to use for training and predicting
-MODEL_DIR = 'models'  # The path for saving model file
+MODEL_DIR = '../src/models'  # The path for saving model file
 NUM_CANDIDATES = 9  # The number of possible predicted classes to consider
 # The testing sample for normal log sequence
 NORMAL_SAMPLE = [67, 83, 30, 74, 73, 0, 22, 22, 24, 173, 186, 117, 79, 44, 45, 66, 205]

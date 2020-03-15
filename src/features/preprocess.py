@@ -3,7 +3,7 @@ import torch
 from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import TensorDataset, DataLoader
 
-import src.config as config
+import config.local as config
 
 
 def generate_dataset(series):

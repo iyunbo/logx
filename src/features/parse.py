@@ -3,7 +3,7 @@ import os.path as path
 
 import mlflow
 
-import src.config as config
+import config.local as config
 from src.features import drain
 
 
