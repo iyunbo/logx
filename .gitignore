@@ -87,3 +87,4 @@ mlruns
 .mypy_cache/
 logs
 data/interim
+.ipython/*

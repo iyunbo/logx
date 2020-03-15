@@ -11,7 +11,10 @@ def create_pipeline(**kwargs):
         [
             node(
                 parse_log,
-                None,
+                ["params:input_dir",
+                 "params:log_format",
+                 "params:log_file",
+                 "params:parsing_result_dir"],
                 "structured_csv",
             ),
             node(
