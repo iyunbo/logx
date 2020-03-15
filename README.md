@@ -64,7 +64,7 @@ LogX is based on following open source technologies
 - [Kedro](https://kedro.readthedocs.io/en/stable/06_resources/02_architecture_overview.html)
 why combine MLflow with Kedro ?
 
-<img src="https://miro.medium.com/max/1720/1*vV35ANxIlXvhL_GE1rYoCg.png">
+![]("https://miro.medium.com/max/1720/1*vV35ANxIlXvhL_GE1rYoCg.png")
 
 - Drain as the log parser: [Drain: An Online Log Parsing Approach with Fixed Depth Tree](http://jiemingzhu.github.io/pub/pjhe_icws2017.pdf)
 - [DeepLog](https://github.com/wuyifan18/DeepLog)
