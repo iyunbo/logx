@@ -62,6 +62,7 @@ LogX is based on following open source technologies
 - Python 3.7
 - [MLflow](https://mlflow.org/)
 - [Kedro](https://kedro.readthedocs.io/en/stable/06_resources/02_architecture_overview.html)
+
 why combine MLflow with Kedro ?
 
 ![]("https://miro.medium.com/max/1720/1*vV35ANxIlXvhL_GE1rYoCg.png")
