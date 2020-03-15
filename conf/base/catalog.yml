@@ -43,8 +43,38 @@
 # This is a data set used by the "Hello World" example pipeline provided with the project
 # template. Please feel free to remove it once you remove the example pipeline.
 
-example_iris_data:
+spark_log_raw:
+  type: text.TextDataSet
+  filepath: data/external/Spark_2k.log
+
+spark_log_structured:
   type: pandas.CSVDataSet
-  filepath: data/01_raw/iris.csv
+  filepath: data/interim/Spark_2k.log_structured.csv
 
+spark_log_templates:
+  type: pandas.CSVDataSet
+  filepath: data/interim/Spark_2k.log_templates.csv
 
+hdfs_test_abnormal:
+  type: text.TextDataSet
+  filepath: data/external/hdfs_test_abnormal
+
+hdfs_test_normal:
+  type: text.TextDataSet
+  filepath: data/external/hdfs_test_normal
+
+hdfs_train:
+  type: text.TextDataSet
+  filepath: data/external/hdfs_train
+
+log4j_raw:
+  type: text.TextDataSet
+  filepath: data/raw/log4j-2020-02-28-22.log
+
+log4j_structured:
+  type: pandas.CSVDataSet
+  filepath: data/interim/log4j-2020-02-28-22.log_structured.csv
+
+log4j_templates:
+  type: pandas.CSVDataSet
+  filepath: data/interim/log4j-2020-02-28-22.log_templates.csv

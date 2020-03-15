@@ -86,3 +86,4 @@ mlruns
 # Mypy cache
 .mypy_cache/
 logs
+data/interim
