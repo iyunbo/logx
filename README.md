@@ -6,6 +6,8 @@ LogX is a modern AI system for performance analysis and anomaly detection based 
 Project Organization
 ------------
 
+Project based on the [cookiecutter data science project](https://drivendata.github.io/cookiecutter-data-science/) template
+
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
@@ -58,7 +60,7 @@ LogX is based on following open source technologies
 ------------
 
 - Python 3.7
-- MLflow: https://mlflow.org/
+- [MLflow](https://mlflow.org/)
 - Drain as the log parser: [Drain: An Online Log Parsing Approach with Fixed Depth Tree](http://jiemingzhu.github.io/pub/pjhe_icws2017.pdf)
-- DeepLog: https://github.com/wuyifan18/DeepLog
-- etc.
+- [DeepLog](https://github.com/wuyifan18/DeepLog)
+- [Kedro](https://kedro.readthedocs.io/en/stable/06_resources/02_architecture_overview.html)
