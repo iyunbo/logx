@@ -85,3 +85,4 @@ mlruns
 
 # Mypy cache
 .mypy_cache/
+logs

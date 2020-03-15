@@ -1,9 +1,32 @@
+"""step: parsing the log"""
+import os.path as path
+
+import config.local as config
+import mlflow
 import pandas as pd
 import torch
 from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import TensorDataset, DataLoader
 
-import config.local as config
+from . import drain
+
+
+def parse_log():
+    """parsing log"""
+    # Regular expression list for optional pre-processing (default: [])
+    regex = []
+    similarity_threshold = 0.6  # Similarity threshold
+    depth = 4  # Depth of all leaf nodes
+    result_dir = config.PARSING_RESULT_DIR  # Parsing result path
+
+    # parsing log into structured CSV
+    parser = drain.LogParser(config.LOG_FORMAT, indir=config.INPUT_DIR,
+                             outdir=result_dir, depth=depth, st=similarity_threshold, rex=regex)
+    parser.parse(config.LOG_FILE)
+
+    mlflow.log_artifacts(result_dir, "parsed_log")
+
+    return path.join(result_dir, config.LOG_FILE + '_structured.csv')
 
 
 def generate_dataset(series):
@@ -22,7 +45,7 @@ def generate_dataset(series):
     return dataset
 
 
-def main(csv_file):
+def make_dataloader(csv_file):
     # read CSV
     df = pd.read_csv(csv_file)
 
