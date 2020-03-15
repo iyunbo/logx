@@ -10,7 +10,7 @@ import config.local as config
 from src.models.deeplog import DeepLog
 
 
-def run(dataloader, num_classes):
+def main(dataloader, num_classes):
     model = DeepLog(config.INPUT_SIZE, config.HIDDEN_SIZE, config.NUM_LAYERS, num_classes, config.DEVICE)
     model_name = 'Adam_batch_size={}_epoch={}'.format(str(config.BATCH_SIZE), str(config.NUM_EPOCHS))
     writer = SummaryWriter(log_dir=os.path.join(config.MODEL_DIR, model_name))

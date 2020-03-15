@@ -22,7 +22,7 @@ def generate_dataset(series):
     return dataset
 
 
-def run(csv_file):
+def main(csv_file):
     # read CSV
     df = pd.read_csv(csv_file)
 

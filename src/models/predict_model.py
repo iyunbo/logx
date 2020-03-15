@@ -14,7 +14,7 @@ def generate(name, sample):
     return sequences
 
 
-def run(num_classes, model_path):
+def main(num_classes, model_path):
     # Hyper-Parameters
     device = torch.device(config.DEVICE)
     input_size = config.INPUT_SIZE

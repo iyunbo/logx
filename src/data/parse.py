@@ -4,10 +4,10 @@ import os.path as path
 import mlflow
 
 import config.local as config
-from src.features import drain
+from src.data import drain
 
 
-def run():
+def main():
     """parsing log"""
     # Regular expression list for optional pre-processing (default: [])
     regex = []

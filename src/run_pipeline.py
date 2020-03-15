@@ -1,15 +1,13 @@
-from src.features import parse, preprocess
+from src.data import make_dataset
 from src.models import train_model, predict_model
 
 
 def main():
-    csv_file = parse.run()
+    dataloader, num_classes = make_dataset.main()
 
-    dataloader, num_classes = preprocess.run(csv_file)
+    model_file = train_model.main(dataloader, num_classes)
 
-    model_file = train_model.run(dataloader, num_classes)
-
-    predict_model.run(num_classes, model_file)
+    predict_model.main(num_classes, model_file)
 
 
 if __name__ == "__main__":

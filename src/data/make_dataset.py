@@ -1,19 +1,29 @@
 # -*- coding: utf-8 -*-
-import click
 import logging
+import os
 from pathlib import Path
+
+import click
 from dotenv import find_dotenv, load_dotenv
 
+from src.data import parse, preprocess
 
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
+
+# @click.command()
+# @click.argument('input_filepath', type=click.Path(exists=True))
+# @click.argument('output_filepath', type=click.Path())
+def main(input_filepath=os.environ.get('INPUT_FILEPATH'), output_filepath=os.environ.get('OUTPUT_FILEPATH')):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
-    logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+    log = logging.getLogger(__name__)
+    log.info('making final data set from raw data')
+
+    csv_file = parse.main()
+
+    dataloader, num_classes = preprocess.main(csv_file)
+
+    return dataloader, num_classes
 
 
 if __name__ == '__main__':
