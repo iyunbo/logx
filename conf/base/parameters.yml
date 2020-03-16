@@ -12,6 +12,15 @@ log_format: "<Date> <Time> <Level> <Component>: <Content>"
 # The output directory of parsing results
 parsing_result_dir: "data/interim"
 
+# the similarity threshold to consider two phrase are similar
+parsing_similarity_threshold: 0.6
+
+# the depth of parsing tree
+parsing_tree_depth: 4
+
+# the optional regex for optimized parsing
+parsing_regex: []
+
 # The column name for event unique name
 event_key: "EventTemplate"
 

@@ -27,9 +27,7 @@ def predict(num_classes,
             num_layers,
             num_candidates,
             dev):
-    # Hyper-Parameters
     device = torch.device(dev)
-
     model = DeepLog(input_size, hidden_size, num_layers, num_classes, device)
     model.load_state_dict(torch.load(model_path))
     model.eval()
@@ -38,6 +36,7 @@ def predict(num_classes,
     test_abnormal_loader = make_sequences('abnormal', abnormal_sample, window_size)
     true_positive = 0
     false_positive = 0
+
     # Test the model
     start_time = time.time()
     with torch.no_grad():

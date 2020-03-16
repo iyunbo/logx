@@ -74,7 +74,7 @@ target/
 
 # exclude data from source control by default
 *.0
-.pt
+*.pt
 mlruns
 
 # Mac OS-specific storage files

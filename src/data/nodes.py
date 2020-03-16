@@ -10,7 +10,7 @@ from torch.utils.data import TensorDataset, DataLoader
 from . import drain
 
 
-def parse_log(input_dir, log_format, log_file, result_dir, similarity_threshold=0.6, depth=4, regex=[]):
+def parse_log(input_dir, log_format, log_file, result_dir, similarity_threshold, depth, regex):
     """parsing log
     similarity_threshold: Similarity threshold
     depth: Depth of all leaf nodes
