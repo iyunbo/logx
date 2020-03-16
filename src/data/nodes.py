@@ -1,4 +1,5 @@
 """step: parsing the log"""
+import logging
 import os.path as path
 
 import mlflow
@@ -8,6 +9,8 @@ from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import TensorDataset, DataLoader
 
 from . import drain
+
+log = logging.getLogger(__name__)
 
 
 def parse_log(input_dir, log_format, log_file, result_dir, similarity_threshold, depth, regex):
@@ -30,7 +33,7 @@ def generate_dataset(series, window_size):
     inputs = []
     outputs = []
     sequence = series.tolist()
-    print('sequence size: {}'.format(len(sequence)))
+    log.info('sequence size: {}'.format(len(sequence)))
     for i in range(len(sequence) - window_size):
         inputs.append(sequence[i:i + window_size])
         outputs.append(sequence[i + window_size])
@@ -38,7 +41,7 @@ def generate_dataset(series, window_size):
     dataset = TensorDataset(torch.tensor(
         inputs, dtype=torch.float), torch.tensor(outputs))
 
-    print('Number of sequences({}): {}'.format('Event', len(inputs)))
+    log.info('Number of sequences({}): {}'.format('Event', len(inputs)))
     return dataset
 
 
@@ -47,7 +50,7 @@ def make_dataloader(csv_file, event_key, sequence_key, window_size, batch_size):
     df = pd.read_csv(csv_file)
 
     num_classes = len(df[event_key].unique())
-    print('Total event count:', num_classes)
+    log.info(f'Total event count: {num_classes}')
 
     le = LabelEncoder()
 

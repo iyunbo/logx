@@ -10,6 +10,8 @@ import re
 from datetime import datetime
 
 import pandas as pd
+import logging
+log = logging.getLogger(__name__)
 
 
 class Logcluster:
@@ -235,7 +237,7 @@ class LogParser:
         else:
             pStr += node.digitOrtoken
 
-        print(pStr)
+        log.info(pStr)
 
         if node.depth == self.depth:
             return 1
@@ -243,7 +245,7 @@ class LogParser:
             self.printTree(node.childD[child], dep + 1)
 
     def parse(self, logName):
-        print('Parsing file: ' + os.path.join(self.path, logName))
+        log.info('Parsing file: ' + os.path.join(self.path, logName))
         start_time = datetime.now()
         self.logName = logName
         rootNode = Node()
@@ -273,14 +275,14 @@ class LogParser:
 
             count += 1
             if count % 1000 == 0 or count == len(self.df_log):
-                print('Processed {0:.1f}% of log lines.'.format(count * 100.0 / len(self.df_log)))
+                log.info('Processed {0:.1f}% of log lines.'.format(count * 100.0 / len(self.df_log)))
 
         if not os.path.exists(self.savePath):
             os.makedirs(self.savePath)
 
         self.outputResult(logCluL)
 
-        print('Parsing done. [Time taken: {!s}]'.format(datetime.now() - start_time))
+        log.info('Parsing done. [Time taken: {!s}]'.format(datetime.now() - start_time))
 
     def load_data(self):
         headers, regex = self.generate_logformat_regex(self.log_format)

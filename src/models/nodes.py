@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 
@@ -8,12 +9,14 @@ from torch.utils.tensorboard import SummaryWriter
 
 from src.models.deeplog import DeepLog
 
+log = logging.getLogger(__name__)
+
 
 def make_sequences(name, sample, window_size):
     sequences = []
     ln = sample + [-1] * (window_size + 1 - len(sample))
     sequences.append(tuple(ln))
-    print('Number of sequences({}): {}'.format(name, len(ln)))
+    log.info('Number of sequences({}): {}'.format(name, len(ln)))
     return sequences
 
 
@@ -26,12 +29,12 @@ def predict(num_classes,
             hidden_size,
             num_layers,
             num_candidates,
-            dev):
-    device = torch.device(dev)
+            cpu_or_gpu):
+    device = torch.device(cpu_or_gpu)
     model = DeepLog(input_size, hidden_size, num_layers, num_classes, device)
     model.load_state_dict(torch.load(model_path))
     model.eval()
-    print('model_path: {}'.format(model_path))
+    log.info('model_path: {}'.format(model_path))
     test_normal_loader = make_sequences('normal', normal_sample, window_size)
     test_abnormal_loader = make_sequences('abnormal', abnormal_sample, window_size)
     true_positive = 0
@@ -64,16 +67,16 @@ def predict(num_classes,
                     true_positive += 1
                     break
     elapsed_time = time.time() - start_time
-    print('elapsed_time: {:.3f}s'.format(elapsed_time))
+    log.info('elapsed_time: {:.3f}s'.format(elapsed_time))
     # Compute precision, recall and F1-measure
     false_negative = len(test_abnormal_loader) - true_positive
     precision = 100 * true_positive / (true_positive + false_positive)
     recall = 100 * true_positive / (true_positive + false_negative)
     f1 = 2 * precision * recall / (precision + recall)
-    print(
+    log.info(
         'false positive (FP): {}, false negative (FN): {}, Precision: {:.3f}%, Recall: {:.3f}%, F1-measure: {:.3f}%'.format(
             false_positive, false_negative, precision, recall, f1))
-    print('Finished Predicting')
+    log.info('Finished Predicting')
 
 
 def train(dataloader, model_dir, num_classes, window_size, batch_size, num_epochs, input_size, hidden_size, num_layers,
@@ -103,14 +106,14 @@ def train(dataloader, model_dir, num_classes, window_size, batch_size, num_epoch
             train_loss += loss.item()
             optimizer.step()
             writer.add_graph(model, seq)
-        print('Epoch [{}/{}], train_loss: {:.4f}'.format(epoch + 1, num_epochs, train_loss / total_step))
+        log.info('Epoch [{}/{}], train_loss: {:.4f}'.format(epoch + 1, num_epochs, train_loss / total_step))
         writer.add_scalar('train_loss', train_loss / total_step, epoch + 1)
     elapsed_time = time.time() - start_time
-    print('elapsed_time: {:.3f}s'.format(elapsed_time))
+    log.info('elapsed_time: {:.3f}s'.format(elapsed_time))
     if not os.path.isdir(model_dir):
         os.makedirs(model_dir)
     model_file = model_dir + '/' + model_name + '.pt'
     torch.save(model.state_dict(), model_file)
     writer.close()
-    print('Finished Training')
+    log.info('Finished Training')
     return model_file
