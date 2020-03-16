@@ -19,7 +19,11 @@ def create_pipeline(**kwargs):
             ),
             node(
                 make_dataloader,
-                "structured_csv",
+                ["structured_csv",
+                 "params:event_key",
+                 "params:sequence_key",
+                 "params:window_size",
+                 "params:batch_size"],
                 ["dataloader", "num_classes"],
             )
         ]

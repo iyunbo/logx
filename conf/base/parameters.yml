@@ -1,7 +1,46 @@
 #Parameters for pipelines
 
+# The input directory of log file
 input_dir: "data/raw/"
+
+# The input log file name
 log_file: "log4j-2020-02-28-22.log"
+
+# log format expression with <column1>other string<column2>or separator<column3>
 log_format: "<Date> <Time> <Level> <Component>: <Content>"
+
+# The output directory of parsing results
 parsing_result_dir: "data/interim"
 
+# The column name for event unique name
+event_key: "EventTemplate"
+
+# The column name for encoded event key, used for generating sequences
+sequence_key: "Event"
+
+# The windows size for LSTM
+window_size: 10
+
+# The data loader batch size
+batch_size: 16
+
+# Number of epochs for training
+num_epochs: 5
+
+# The length of LSTM input vector
+lstm_input_size: 1
+
+# The size of the hidden layer of LSTM
+lstm_hidden_size: 64
+
+# How many layers do we want to build the LSTM
+lstm_num_layers: 2
+
+# The hardware device to use for training and predicting
+device: "cpu"
+
+# The number of possible predicted classes to consider
+num_predict_candidates: 9
+
+# The path for saving model file
+model_dir: "models"

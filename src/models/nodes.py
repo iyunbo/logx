@@ -1,37 +1,41 @@
 import os
 import time
 
-import config.local as config
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from src.models.deeplog import DeepLog
 from torch.utils.tensorboard import SummaryWriter
 
+from src.models.deeplog import DeepLog
 
-def make_sequences(name, sample):
+
+def make_sequences(name, sample, window_size):
     sequences = []
-    ln = sample + [-1] * (config.WINDOW_SIZE + 1 - len(sample))
+    ln = sample + [-1] * (window_size + 1 - len(sample))
     sequences.append(tuple(ln))
     print('Number of sequences({}): {}'.format(name, len(ln)))
     return sequences
 
 
-def predict(num_classes, model_path):
+def predict(num_classes,
+            model_path,
+            normal_sample,
+            abnormal_sample,
+            window_size,
+            input_size,
+            hidden_size,
+            num_layers,
+            num_candidates,
+            dev):
     # Hyper-Parameters
-    device = torch.device(config.DEVICE)
-    input_size = config.INPUT_SIZE
-    num_layers = config.NUM_LAYERS
-    hidden_size = config.HIDDEN_SIZE
-    window_size = config.WINDOW_SIZE
-    num_candidates = config.NUM_CANDIDATES
+    device = torch.device(dev)
 
     model = DeepLog(input_size, hidden_size, num_layers, num_classes, device)
     model.load_state_dict(torch.load(model_path))
     model.eval()
     print('model_path: {}'.format(model_path))
-    test_normal_loader = make_sequences('normal', config.NORMAL_SAMPLE)
-    test_abnormal_loader = make_sequences('abnormal', config.ABNORMAL_SAMPLE)
+    test_normal_loader = make_sequences('normal', normal_sample, window_size)
+    test_abnormal_loader = make_sequences('abnormal', abnormal_sample, window_size)
     true_positive = 0
     false_positive = 0
     # Test the model
@@ -73,10 +77,11 @@ def predict(num_classes, model_path):
     print('Finished Predicting')
 
 
-def train(dataloader, num_classes):
-    model = DeepLog(config.INPUT_SIZE, config.HIDDEN_SIZE, config.NUM_LAYERS, num_classes, config.DEVICE)
-    model_name = 'Adam_batch_size={}_epoch={}'.format(str(config.BATCH_SIZE), str(config.NUM_EPOCHS))
-    writer = SummaryWriter(log_dir=os.path.join(config.MODEL_DIR, model_name))
+def train(dataloader, model_dir, num_classes, window_size, batch_size, num_epochs, input_size, hidden_size, num_layers,
+          device):
+    model = DeepLog(input_size, hidden_size, num_layers, num_classes, device)
+    model_name = 'Adam_batch_size={}_epoch={}'.format(str(batch_size), str(num_epochs))
+    writer = SummaryWriter(log_dir=os.path.join(model_dir, model_name))
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -85,13 +90,13 @@ def train(dataloader, num_classes):
     # Train the model
     start_time = time.time()
     total_step = len(dataloader)
-    for epoch in range(config.NUM_EPOCHS):  # Loop over the dataset multiple times
+    for epoch in range(num_epochs):  # Loop over the dataset multiple times
         train_loss = 0
         for step, (seq, label) in enumerate(dataloader):
             # Forward pass
-            seq = seq.clone().detach().view(-1, config.WINDOW_SIZE, config.INPUT_SIZE).to(config.DEVICE)
+            seq = seq.clone().detach().view(-1, window_size, input_size).to(device)
             output = model(seq)
-            loss = criterion(output, label.to(config.DEVICE))
+            loss = criterion(output, label.to(device))
 
             # Backward and optimize
             optimizer.zero_grad()
@@ -99,13 +104,13 @@ def train(dataloader, num_classes):
             train_loss += loss.item()
             optimizer.step()
             writer.add_graph(model, seq)
-        print('Epoch [{}/{}], train_loss: {:.4f}'.format(epoch + 1, config.NUM_EPOCHS, train_loss / total_step))
+        print('Epoch [{}/{}], train_loss: {:.4f}'.format(epoch + 1, num_epochs, train_loss / total_step))
         writer.add_scalar('train_loss', train_loss / total_step, epoch + 1)
     elapsed_time = time.time() - start_time
     print('elapsed_time: {:.3f}s'.format(elapsed_time))
-    if not os.path.isdir(config.MODEL_DIR):
-        os.makedirs(config.MODEL_DIR)
-    model_file = config.MODEL_DIR + '/' + model_name + '.pt'
+    if not os.path.isdir(model_dir):
+        os.makedirs(model_dir)
+    model_file = model_dir + '/' + model_name + '.pt'
     torch.save(model.state_dict(), model_file)
     writer.close()
     print('Finished Training')
