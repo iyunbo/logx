@@ -2,7 +2,6 @@
 import logging
 import os.path as path
 
-import mlflow
 import pandas as pd
 import torch
 from sklearn.preprocessing import LabelEncoder
@@ -23,8 +22,6 @@ def parse_log(input_dir, log_format, log_file, result_dir, similarity_threshold,
     parser = drain.LogParser(log_format, indir=input_dir,
                              outdir=result_dir, depth=depth, st=similarity_threshold, rex=regex)
     parser.parse(log_file)
-
-    mlflow.log_artifacts(result_dir, "parsed_log")
 
     return path.join(result_dir, log_file + '_structured.csv')
 

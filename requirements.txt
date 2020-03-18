@@ -14,7 +14,7 @@ pandas
 numpy
 torch
 tensorboard
-mlflow
+# mlflow: not work on windows for now
 sklearn
 jupyter
 kedro
