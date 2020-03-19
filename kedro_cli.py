@@ -295,7 +295,7 @@ def lint(files):
     """Run flake8, isort and (on Python >=3.6) black."""
     # pylint: disable=unused-import
     if not files:
-        files = ("src/tests", "src/getting_started")
+        files = ("src/tests", "src")
 
     try:
         import flake8
@@ -361,7 +361,7 @@ def build_docs(open_docs):
     python_call("pip", ["install", "src/[docs]"])
     python_call("pip", ["install", "-r", "src/requirements.txt"])
     python_call(
-        "ipykernel", ["install", "--user", "--name=getting_started"]
+        "ipykernel", ["install", "--user", "--name=logx"]
     )
     shutil.rmtree("docs/build", ignore_errors=True)
     call(
@@ -370,7 +370,7 @@ def build_docs(open_docs):
             "--module-first",
             "-o",
             "docs/source",
-            "src/getting_started",
+            "src",
         ]
     )
     call(["sphinx-build", "-M", "html", "docs/source", "docs/build", "-a"])
@@ -440,7 +440,7 @@ def _build_jupyter_command(
     ]
 
     if not all_kernels:
-        project_name = "Getting Started"
+        project_name = "LogX"
         kernel_name = re.sub(r"[^\w]+", "", project_name).strip() or "Kedro"
 
         cmd += [
@@ -556,7 +556,7 @@ def convert_notebook(all_flag, overwrite_flag, filepath):
         sys.exit(1)
 
     kedro_project_path = context.project_path
-    kedro_package_name = "getting_started"
+    kedro_package_name = "logx"
 
     if all_flag:
         # pathlib glob does not ignore hidden directories,

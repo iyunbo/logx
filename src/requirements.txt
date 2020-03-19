@@ -12,7 +12,7 @@ botocore==1.15.21
 PyYAML<5.3
 pandas==0.25.0
 numpy
-torch
+torch==1.4.0
 tensorboard
 # mlflow: not work on windows for now
 sklearn
@@ -20,3 +20,5 @@ jupyter
 kedro
 IPython
 isort
+black
+pytest

@@ -89,3 +89,4 @@ mlruns
 logs
 data/interim
 .ipython/*
+data/**

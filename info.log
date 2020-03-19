@@ -1,0 +1,12 @@
+2020-03-18 21:09:40,462 - blib2to3.pgen2.driver - INFO - Generating grammar tables from d:\software\anaconda\envs\logx\lib\site-packages\blib2to3\Grammar.txt
+2020-03-18 21:09:40,494 - blib2to3.pgen2.driver - INFO - Writing grammar tables to C:\Users\yunbo\AppData\Local\black\black\Cache\19.10b0\Grammar3.7.6.final.0.pickle
+2020-03-18 21:09:40,495 - blib2to3.pgen2.driver - INFO - Writing failed: [Errno 2] No such file or directory: 'C:\\Users\\yunbo\\AppData\\Local\\black\\black\\Cache\\19.10b0\\tmpqcibcs0b'
+2020-03-18 21:09:40,495 - blib2to3.pgen2.driver - INFO - Generating grammar tables from d:\software\anaconda\envs\logx\lib\site-packages\blib2to3\PatternGrammar.txt
+2020-03-18 21:09:40,498 - blib2to3.pgen2.driver - INFO - Writing grammar tables to C:\Users\yunbo\AppData\Local\black\black\Cache\19.10b0\PatternGrammar3.7.6.final.0.pickle
+2020-03-18 21:09:40,499 - blib2to3.pgen2.driver - INFO - Writing failed: [Errno 2] No such file or directory: 'C:\\Users\\yunbo\\AppData\\Local\\black\\black\\Cache\\19.10b0\\tmpml25calp'
+2020-03-18 21:10:06,741 - blib2to3.pgen2.driver - INFO - Generating grammar tables from d:\software\anaconda\envs\logx\lib\site-packages\blib2to3\Grammar.txt
+2020-03-18 21:10:06,771 - blib2to3.pgen2.driver - INFO - Writing grammar tables to C:\Users\yunbo\AppData\Local\black\black\Cache\19.10b0\Grammar3.7.6.final.0.pickle
+2020-03-18 21:10:06,772 - blib2to3.pgen2.driver - INFO - Writing failed: [Errno 2] No such file or directory: 'C:\\Users\\yunbo\\AppData\\Local\\black\\black\\Cache\\19.10b0\\tmpvx0c4rdx'
+2020-03-18 21:10:06,772 - blib2to3.pgen2.driver - INFO - Generating grammar tables from d:\software\anaconda\envs\logx\lib\site-packages\blib2to3\PatternGrammar.txt
+2020-03-18 21:10:06,776 - blib2to3.pgen2.driver - INFO - Writing grammar tables to C:\Users\yunbo\AppData\Local\black\black\Cache\19.10b0\PatternGrammar3.7.6.final.0.pickle
+2020-03-18 21:10:06,777 - blib2to3.pgen2.driver - INFO - Writing failed: [Errno 2] No such file or directory: 'C:\\Users\\yunbo\\AppData\\Local\\black\\black\\Cache\\19.10b0\\tmp2_fdjatz'
