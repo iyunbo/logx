@@ -1,65 +1,68 @@
 """
 Description : This file implements the Drain algorithm for log parsing
-Author      : LogPAI team
+Author      : LogPAI team, Yunbo WANG
 License     : MIT
 """
 
 import hashlib
+import logging
 import os
 import re
 from datetime import datetime
 
 import pandas as pd
-import logging
+
 log = logging.getLogger(__name__)
 
 
 class Logcluster:
-    def __init__(self, logTemplate='', logIDL=None):
-        self.logTemplate = logTemplate
-        if logIDL is None:
-            logIDL = []
-        self.logIDL = logIDL
+    def __init__(self, log_template='', log_idl=None):
+        self.logTemplate = log_template
+        if log_idl is None:
+            log_idl = []
+        self.logIDL = log_idl
 
 
 class Node:
-    def __init__(self, childD=None, depth=0, digitOrToken=None):
-        if childD is None:
-            childD = dict()
-        self.childD = childD
+    def __init__(self, child_node=None, depth=0, digit_or_token=None):
+        if child_node is None:
+            child_node = dict()
+        self.childD = child_node
         self.depth = depth
-        self.digitOrToken = digitOrToken
+        self.digitOrToken = digit_or_token
 
 
 class LogParser:
     def __init__(self, log_format, indir='./', outdir='./result/', depth=4, st=0.4,
-                 maxChild=100, rex=[], keep_para=True):
+                 max_child=100, rex=None, keep_para=True):
         """
         Attributes
         ----------
-            rex : regular expressions used in preprocessing (step1)
-            path : the input path stores the input log file name
+            log_format : the format expression of raw log messages
+            indir : the input path stores the input log file name
+            outdir : the output path stores the file containing structured logs
             depth : depth of all leaf nodes
             st : similarity threshold
-            maxChild : max number of children of an internal node
-            logName : the name of the input file containing raw log messages
-            savePath : the output path stores the file containing structured logs
+            max_child : max number of children of an internal node
+            rex : regular expressions used in preprocessing (step1)
+            keep_para : indicates if we keep the parameters' values
         """
         self.path = indir
         self.depth = depth - 2
         self.st = st
-        self.maxChild = maxChild
-        self.logName = None
+        self.maxChild = max_child
+        self.log_name = None
         self.savePath = outdir
         self.df_log = None
         self.log_format = log_format
-        self.rex = rex
+        self.rex = rex if rex is not None else []
         self.keep_para = keep_para
 
-    def hasNumbers(self, s):
+    @staticmethod
+    def has_numbers(s):
         return any(char.isdigit() for char in s)
 
-    def treeSearch(self, rn, seq):
+    def tree_search(self, rn, seq):
         retLogClust = None
 
         seqLen = len(seq)
@@ -90,7 +93,7 @@ class LogParser:
     def addSeqToPrefixTree(self, rn, logClust):
         seqLen = len(logClust.logTemplate)
         if seqLen not in rn.childD:
-            firtLayerNode = Node(depth=1, digitOrToken=seqLen)
+            firtLayerNode = Node(depth=1, digit_or_token=seqLen)
             rn.childD[seqLen] = firtLayerNode
         else:
             firtLayerNode = rn.childD[seqLen]
@@ -110,21 +113,21 @@ class LogParser:
 
             # If token not matched in this layer of existing tree.
             if token not in parentn.childD:
-                if not self.hasNumbers(token):
+                if not self.has_numbers(token):
                     if '<*>' in parentn.childD:
                         if len(parentn.childD) < self.maxChild:
-                            newNode = Node(depth=currentDepth + 1, digitOrToken=token)
+                            newNode = Node(depth=currentDepth + 1, digit_or_token=token)
                             parentn.childD[token] = newNode
                             parentn = newNode
                         else:
                             parentn = parentn.childD['<*>']
                     else:
                         if len(parentn.childD) + 1 < self.maxChild:
-                            newNode = Node(depth=currentDepth + 1, digitOrToken=token)
+                            newNode = Node(depth=currentDepth + 1, digit_or_token=token)
                             parentn.childD[token] = newNode
                             parentn = newNode
                         elif len(parentn.childD) + 1 == self.maxChild:
-                            newNode = Node(depth=currentDepth + 1, digitOrToken='<*>')
+                            newNode = Node(depth=currentDepth + 1, digit_or_token='<*>')
                             parentn.childD['<*>'] = newNode
                             parentn = newNode
                         else:
@@ -132,7 +135,7 @@ class LogParser:
 
                 else:
                     if '<*>' not in parentn.childD:
-                        newNode = Node(depth=currentDepth + 1, digitOrToken='<*>')
+                        newNode = Node(depth=currentDepth + 1, digit_or_token='<*>')
                         parentn.childD['<*>'] = newNode
                         parentn = newNode
                     else:
@@ -215,14 +218,14 @@ class LogParser:
 
         if self.keep_para:
             self.df_log["ParameterList"] = self.df_log.apply(self.get_parameter_list, axis=1)
-        self.df_log.to_csv(os.path.join(self.savePath, self.logName + '_structured.csv'), index=False)
+        self.df_log.to_csv(os.path.join(self.savePath, self.log_name + '_structured.csv'), index=False)
 
         occ_dict = dict(self.df_log['EventTemplate'].value_counts())
         df_event = pd.DataFrame()
         df_event['EventTemplate'] = self.df_log['EventTemplate'].unique()
         df_event['EventId'] = df_event['EventTemplate'].map(lambda x: hashlib.md5(x.encode('utf-8')).hexdigest()[0:8])
         df_event['Occurrences'] = df_event['EventTemplate'].map(occ_dict)
-        df_event.to_csv(os.path.join(self.savePath, self.logName + '_templates.csv'), index=False,
+        df_event.to_csv(os.path.join(self.savePath, self.log_name + '_templates.csv'), index=False,
                         columns=["EventId", "EventTemplate", "Occurrences"])
 
     def printTree(self, node, dep):
@@ -247,7 +250,7 @@ class LogParser:
     def parse(self, logName):
         log.info('Parsing file: ' + os.path.join(self.path, logName))
         start_time = datetime.now()
-        self.logName = logName
+        self.log_name = logName
         rootNode = Node()
         logCluL = []
 
@@ -256,19 +259,19 @@ class LogParser:
         count = 0
         for idx, line in self.df_log.iterrows():
             logID = line['LineId']
-            logmessageL = self.preprocess(line['Content']).strip().split()
-            # logmessageL = filter(lambda x: x != '', re.split('[\s=:,]', self.preprocess(line['Content'])))
-            matchCluster = self.treeSearch(rootNode, logmessageL)
+            message_template = self.preprocess(line['Content']).strip().split()
+            # message_template = filter(lambda x: x != '', re.split('[\s=:,]', self.preprocess(line['Content'])))
+            matchCluster = self.tree_search(rootNode, message_template)
 
             # Match no existing log cluster
             if matchCluster is None:
-                newCluster = Logcluster(logTemplate=logmessageL, logIDL=[logID])
+                newCluster = Logcluster(log_template=str(message_template), log_idl=[logID])
                 logCluL.append(newCluster)
                 self.addSeqToPrefixTree(rootNode, newCluster)
 
             # Add the new log message to the existing cluster
             else:
-                newTemplate = self.getTemplate(logmessageL, matchCluster.logTemplate)
+                newTemplate = self.getTemplate(message_template, matchCluster.logTemplate)
                 matchCluster.logIDL.append(logID)
                 if ' '.join(newTemplate) != ' '.join(matchCluster.logTemplate):
                     matchCluster.logTemplate = newTemplate
@@ -286,11 +289,11 @@ class LogParser:
 
     def load_data(self):
         headers, regex = self.generate_logformat_regex(self.log_format)
-        self.df_log = self.log_to_dataframe(os.path.join(self.path, self.logName), regex, headers, self.log_format)
+        self.df_log = self.log_to_dataframe(os.path.join(self.path, self.log_name), regex, headers, self.log_format)
 
     def preprocess(self, line):
-        for currentRex in self.rex:
-            line = re.sub(currentRex, '<*>', line)
+        for current_rex in self.rex:
+            line = re.sub(current_rex, '<*>', line)
         return line
 
     def log_to_dataframe(self, log_file, regex, headers, logformat):
