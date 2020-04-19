@@ -5,7 +5,7 @@ import pathlib
 import torch
 from torch.utils.data import TensorDataset, DataLoader
 
-import helper
+from . import helper
 from ..models import nodes
 from ..models.deeplog import DeepLog
 

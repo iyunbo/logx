@@ -2,9 +2,12 @@ import logging
 import os.path as path
 import pathlib
 
-import helper
-from ..constant import PLACEHOLDER_PARAM
+import pandas as pd
+
+from . import helper
+from ..constant import PLACEHOLDER_PARAM, SUFFIX_PARSED_LOG
 from ..data import drain
+from ..data import nodes
 
 TEST_LOG = "test.log"
 
@@ -122,9 +125,21 @@ def test_print_tree():
 
 
 def test_get_parameter_list():
-    row = {"Content": "20/02/28 22:47:36 INFO JettyClient$: xxx",
-           "Component": "JettyClient$",
-           "EventTemplate": "<Date> <Time> <Level> <Component>: <Content>"}
+    row = pd.Series({"Content": "20/02/28 22:47:36 INFO JettyClient$: xxx",
+                     "Component": "JettyClient$",
+                     "EventTemplate": "<Date> <Time> <Level> <Component>: <Content>"})
     params = parser.get_parameters(row)
 
     assert len(params) == 5
+
+
+def test_make_dataloader():
+    file = nodes.parse_log(input_dir=path.join(pwd, "data"), log_format="<Date> <Time> <Level> <Component>: <Content>",
+                           log_file=TEST_LOG, result_dir=path.join(pwd, "data"), similarity_threshold=0.3, depth=3,
+                           regex=None)
+    assert file.endswith(SUFFIX_PARSED_LOG)
+
+    dataloader, num_classes = nodes.make_dataloader(csv_file=file, event_key="EventTemplate", sequence_key="Event",
+                                                    window_size=5, batch_size=2)
+    assert num_classes == 24
+    assert len(dataloader) == 16
