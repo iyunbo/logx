@@ -10,6 +10,9 @@ jobs:
       - checkout
       - python/load-cache
       - run:
+          command: pip install kedro
+          name: Install kedro
+      - run:
           command: kedro install
           name: Install
       - python/save-cache
