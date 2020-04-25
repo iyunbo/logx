@@ -8,17 +8,15 @@ jobs:
     executor: python/default
     steps:
       - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
       - python/load-cache
-      - run:
-          command: pip install kedro
-          name: Install kedro
-      - run:
-          command: kedro install
-          name: Install
+        key: deps-{{ .Branch }}-{{ checksum "src/requirements.txt" }}
+      - run: pip install kedro
+      - run: kedro install
       - python/save-cache
-      - run:
-          command: kedro test
-          name: Test
+        key: deps-{{ .Branch }}-{{ checksum "src/requirements.txt" }}
+      - run: kedro test
 
 workflows:
   main:
