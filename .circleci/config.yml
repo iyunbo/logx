@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/circleci-logx
+    docker:
+      - image: circleci/python:3.7.6
+    steps: # a collection of executable commands
+
+      - checkout # check out source code to working directory
+
+      - run: pip install kedro
+      - run: kedro info
+        -
+      - run: kedro test # run the actual tests
