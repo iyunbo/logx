@@ -9,8 +9,7 @@ jobs:
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
-      - run: ls  /usr/local/lib/py*
-      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/dist-packages
       - python/load-cache:
         key: deps-{{ .Branch }}-{{ checksum "src/requirements.txt" }}
       - run: pip install kedro
