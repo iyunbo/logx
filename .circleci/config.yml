@@ -1,14 +1,21 @@
-version: 2
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
 jobs:
-  build:
-    working_directory: ~/circleci-logx
-    docker:
-      - image: circleci/python:3.7.6
-    steps: # a collection of executable commands
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+      - run:
+          command: kedro test
+          name: Test
 
-      - checkout # check out source code to working directory
-
-      - run: pip install kedro
-      - run: kedro info
-        -
-      - run: kedro test # run the actual tests
+workflows:
+  main:
+    jobs:
+      - build-and-test
