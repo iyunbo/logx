@@ -4,10 +4,10 @@ orbs:
   python: circleci/python@0.2.1
 
 jobs:
-  docker:
-    - image: circleci/python:3.7.6
   build-and-test:
     executor: python/default
+    docker:
+      - image: circleci/python:3.7.6
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
